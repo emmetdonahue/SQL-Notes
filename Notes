@@ -1,0 +1,133 @@
+A relational database is a database that organizes information into one or more tables.
+
+A table is a collection of data organized into rows and columns. Tables are sometimes referred to as relations.
+
+A column is a set of data values of a particular type. Here, id, name, and age are the columns
+
+A row is a single record in a table. 
+
+Clauses perform specific tasks in SQL. By convention, clauses are written in capital letters. Clauses can also be referred to as commands.
+
+Function to create table
+
+//params 1...n are the columns (attributes) of the table
+//TYPE_1...TYPE_n are the types of the respective columns. For ex: TEXT or INTEGER
+CREATE TABLE table_name(
+		Param_1 TYPE_1,
+		Param_2 TYPE_2,
+		…
+		Param_n TYPE_n
+);
+
+Function to add row to data table
+//col_1...col_n are the attributes that you will initialize in this fxn
+//val_1...val_n are the to which col1...col_n will be initialized
+INSERT INTO table_name (col_1….col_n)
+VALUES(val_1...val_n);
+
+SELECT statements are used to fetch data from a database. In the statement below
+//note: can use * instead of column_name to select all columns in a table
+	SELECT column_name FROM table_name
+
+Function to add column to table
+//adds column to end of table
+	ALTER TABLE table_name
+	ADD COLUMN col_name data_type_of_col
+
+Function to edit a row in a data table
+//WHERE clause specifies the row in the table to be edited
+	UPDATE table_name
+	SET col_name = new_data
+	WHERE any_col_name = specific_val
+
+EX:
+//update the twitter_handle column of the entry with id = 4 to ‘taylor_swift’
+	UPDATE celebs
+	SET twitter_handle = ‘taylor_swift’
+	WHERE id = 4
+
+Fxn to delete row from table
+//deletes the row where col_name is entry_name
+	DELETE FROM table_name
+	WHERE col_name IS entry_name
+
+EX: 
+//deletes rows that have NULL twitter handle
+	DELETE FROM celebs
+	WHERE twitter_handle IS NULL;
+
+Constraints 
+Add info about how a column can be used
+Allows database to reject insertion attempts that do not adhere to constraints
+Ex: 
+CREATE TABLE celebs (
+	Id INTEGER PRIMARY KEY //attempt to insert a row with a id value equal to one already in the table will not work. You can only have one primary key, but you can have multiple columns within a primary key
+	Name TEXT UNIQUE, //must have different value for every row. Table can have multiple UNIQUE columns
+	Date_of_birth TEXT NOT NULL, //attempt to add a row with NULL date_of_birth will not work
+	date_of_death TEXT DEFAULT ‘not applicable’ //if date of death is not supplied in row insertion, then it will default to ‘not applicable’
+	);
+
+Selecting a column and adding a temporary name to it
+	SELECT column AS alias
+	FROM table_name
+
+Selecting distinct values in a column
+	SELECT DISTINCT col_name
+	FROM table_name
+
+Filtering out certain results in a query using WHERE clause
+Where clause supports NULL (ex: WHERE col_name IS(NOT) NULL)
+	SELECT * FROM table_name
+	WHERE column_name (boolean statement)
+
+LIKE Clauss
+Note: case sensitive
+Use \ operator to search for underscores and % signs
+	SELECT *
+	FROM table_name
+	//the row of any string that satisfies the pattern below will be selected in query. Can be used for numerical values too, but it must be wrapped in ‘ ‘
+	WHERE col_name LIKE (string where _ is a variable character)
+
+% operator
+Works as 0 or more _, useful for pattern matching
+
+BETWEEN Clause
+Used to get values between two characters or letters
+	Ex: WHERE col_name BETWEEN ‘A’ AND ‘J’; 
+Exclusive of 2nd letter (above ex excludes J)
+Inclusive of second number
+
+AND Clause
+Used to combine conditions
+	SELECT * from table_name
+	Where condition1
+	AND condition2
+	
+OR clause
+Similar to and cause, but is satisfied if any of the conditions in it are true
+ORs and ANDs can be combined using parentheses
+
+Sorting Data
+Always insert ORDER BY clause after WHERE
+	ORDER BY col_name //defaults to ascending
+	ORDER BY col_name DESC // sorts in descending order
+
+Capping number of results in a query using LIMIT
+Always goes at the end of the query
+
+CASE statement allows if else logic
+Creates a new column in a query, where the entries of the column are defined according to the ‘THEN’ conditions
+The ‘THEN’ conditions can be multiple data types
+	SELECT col_name_1,...,col_name_n
+	   CASE
+	      WHEN (condition1) then ‘label_for_new_col’
+	      WHEN (condition2) then 2131243 //can be any data type
+      …
+   End
+From table_name
+
+Aggregates are calculations performed on multiple rows of a table, for ex:
+	count(col_name) from table; //returns the number of nonempty rows in col_name. Col_name can be *, will count duplicate rows twice
+	sum(col_name) // returns sum of all values in col_name
+	max(col_name) and min(col_name) //return max and min values in column, respectively
+
