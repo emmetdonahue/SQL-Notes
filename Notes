@@ -129,5 +129,88 @@ From table_name
 Aggregates are calculations performed on multiple rows of a table, for ex:
 	count(col_name) from table; //returns the number of nonempty rows in col_name. Col_name can be *, will count duplicate rows twice
 	sum(col_name) // returns sum of all values in col_name
-	max(col_name) and min(col_name) //return max and min values in column, respectively
+	max(col_name) and min(col_name) //return max and min values in column, respectively. If two rows have share the max or min, the topmost one is returned
 
+//returns average of column
+	select avg(col_name)
+	from table_name;
+//returns average of distinct values in a column
+	select avg(distinct col_name)
+	from table_name
+
+//rounds number to dec decimal places. rounds up if decimal value is >=5
+//dec is int
+//number is the number to be rounded
+	select round(number, dec)
+	FROM fake_apps;
+
+Group By Statement
+//allows us to arrange identical data into groups
+//ex:
+	//this query returns the a table of every category with their corresponding download count
+	select category, sum(downloads)
+	from fake_apps
+	group by category;
+	
+//can also group by multiple columns using column reference numbers
+//ex:
+	SELECT category, 
+   	price,
+  	AVG(downloads)
+	FROM fake_apps
+	GROUP BY 1, 2; //these refer to the first and second column selections in after the select statement (category, price)
+
+HAVING clause
+//limits the results of a query based on an aggregate property
+//similary to WHERE clause
+//comes after group by, but before order by and limit
+//followed by a conditional statement
+//ex
+	//there must be >10 items in the category for the item to appear in the query
+	SELECT price, 
+  	ROUND(AVG(downloads)),
+   	COUNT(*)
+	FROM fake_apps
+	GROUP BY price
+	HAVING COUNT(category) > 10;	
+	
+	
+//JOIN statement (aka INNER JOIN)
+//allows us to merge two data tables according to a column in either one. For example, if we have two tables with customer info,
+//both of which have customer ID in them that correspond to one another, we can JOIN them according to the id column
+//the ON condition needs to be satisfied in order for their corresponding rows to appear in the query
+//null values will be neglected
+//generally, the order in which we join the tables does not affect results. if you "select *" the columns will appear in the order of joining
+//ex:
+	SELECT * // all columns in both tables
+	FROM orders // orders is first table
+	JOIN customers // joining customers with orders
+ 	 ON orders.customer_id = customers.customer_id; //matching customer ID's to one another
+
+//LEFT JOIN statement
+//keeps all rows of the first table whether or not its join value matches with one in the second table. When the left table
+//has no match, the new table will omit the values where the right table would have been
+//example:
+	SELECT *
+	FROM table1 //"left" table
+	LEFT JOIN table2 //right table
+	  ON table1.c2 = table2.c2;
+
+//CROSS JOIN statement
+//creates all possible combinations of two columns
+syntax:
+	SELECT table1.col1,
+   	table2.col2
+	FROM table1 // pull data from table1
+	CROSS JOIN table2; // perform cross join with table2
+
+
+
+
+
+//primary keys
+//value can never be null
+//every row has a unique primary key value
+//a table can only have one primary key column
+
+//foreign key: a primary key for one table that appears in another table
